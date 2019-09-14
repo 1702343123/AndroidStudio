@@ -7,18 +7,24 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:id="@+id/main_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:orientation="vertical">
 
+        <include layout="@layout/tool_bar" />
+
+        <FrameLayout
+            android:id="@+id/main_body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white" />
     </LinearLayout>
 
     <RadioGroup
         android:id="@+id/btn_group"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:background="#F2F2F2"
         android:orientation="horizontal">

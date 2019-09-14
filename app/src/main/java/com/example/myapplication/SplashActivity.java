@@ -5,6 +5,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Timer;
@@ -18,9 +20,12 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        //1.获取需要的空间
+        //  设置启动页全屏
+        LinearLayout layout = findViewById(R.id.layout);
+        layout.setSystemUiVisibility(View.INVISIBLE);
+        //1.获取控件对象
         tvVersion = findViewById(R.id.tv_version);
-        //2.获取或设置空间的值
+        //2.获取设置空间的值
         String version = tvVersion .getText().toString();
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(),0);
@@ -37,8 +42,9 @@ public class SplashActivity extends AppCompatActivity {
                 //不带数据的界面跳转
                 Intent intent = new Intent(SplashActivity.this,MainActivity.class);
                 startActivity(intent);
+                SplashActivity.this.finish();
             }
         };
-        timer.schedule(task,3000);
+        timer.schedule(task,5000);
     }
 }
