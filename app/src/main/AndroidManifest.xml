@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBar">
-        <activity android:name=".activity.UserInfoActivity"></activity>
+        <activity android:name=".activity.ModifyActivity"></activity>
+        <activity android:name=".activity.UserInfoActivity" />
         <activity android:name=".activity.SecretActivity" />
         <activity android:name=".activity.PasswordActivity" />
         <activity android:name=".activity.SettingActivity" />

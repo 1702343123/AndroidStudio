@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F8F8"
+    android:orientation="vertical">
+    <include layout="@layout/tool_bar" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp" />
+    <RelativeLayout
+        android:id="@+id/rl_modify"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:background="@android:color/white"
+        android:paddingRight="10dp" >
+        <EditText
+            android:id="@+id/et_new_content"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="25dp" />
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="25dp"
+            android:src="@drawable/cha"
+            />
+    </RelativeLayout>
+</LinearLayout>
