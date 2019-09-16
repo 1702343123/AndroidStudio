@@ -1,8 +1,7 @@
-package com.example.myapplication;
+package com.example.myapplication.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.myapplication.R;
 import com.example.myapplication.utils.SharedUtils;
 import com.example.myapplication.utils.StatusUtils;
 

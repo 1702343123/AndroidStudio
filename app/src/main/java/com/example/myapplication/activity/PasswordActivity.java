@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.myapplication.R;
 import com.example.myapplication.utils.MD5Utils;
 import com.example.myapplication.utils.SharedUtils;
 import com.example.myapplication.utils.StatusUtils;

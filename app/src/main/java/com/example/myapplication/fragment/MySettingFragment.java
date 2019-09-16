@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.fragment;
 
 
 import android.app.Activity;
@@ -14,6 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.myapplication.R;
+import com.example.myapplication.activity.LoginActivity;
+import com.example.myapplication.activity.SettingActivity;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.myapplication.fragment.MySettingFragment;
+import com.example.myapplication.R;
 import com.example.myapplication.utils.StatusUtils;
 
 

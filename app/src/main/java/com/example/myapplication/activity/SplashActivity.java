@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.myapplication.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //不带数据的界面跳转
-                Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
                 SplashActivity.this.finish();
             }
