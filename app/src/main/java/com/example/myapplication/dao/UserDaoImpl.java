@@ -28,7 +28,7 @@ public class UserDaoImpl implements UserDao {
         String aql="select * from tb_user where user_name=?";
         User userInfo=null;
         db=helper.getReadableDatabase();
-        Cursor cursor=db.query(DBHelper.TBL_NAME_USER,null,"user_name",new String[]{username},null,null,null);
+        Cursor cursor=db.query(DBHelper.TBL_NAME_USER,null,"user_name=?",new String[]{username},null,null,null);
 //       Cursor cursor=db.rawQuery(sql,new String[]{username});
         if (cursor!=null&&cursor.moveToFirst()){
             userInfo=new User();
@@ -70,7 +70,7 @@ public class UserDaoImpl implements UserDao {
         values.put("nick_name",userInfo.getNickname());
         values.put("sex",userInfo.getSex());
         values.put("signature",userInfo.getSignature());
-        db.update(DBHelper.TBL_NAME_USER,values,"username=?",new String[]{userInfo.getUsername()});
+        db.update(DBHelper.TBL_NAME_USER,values,"user_name=?",new String[]{userInfo.getUsername()});
 
 //        String sql="insert into "+DBHelper.TBL_NAME_USER+" values(null,?,?,?,?)";
 //        db.execSQL(sql,new String[]{

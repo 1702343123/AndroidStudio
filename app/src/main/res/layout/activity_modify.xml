@@ -16,17 +16,17 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:gravity="center_vertical"
-        android:paddingLeft="10dp"
         android:background="@android:color/white"
         android:paddingRight="10dp" >
         <EditText
             android:id="@+id/et_new_content"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="25dp" />
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"/>
         <ImageView
-            android:id="@+id/iv_cancel"
+            android:id="@+id/iv_delete"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentEnd="true"

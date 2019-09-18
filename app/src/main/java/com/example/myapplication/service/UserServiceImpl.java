@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void modify(User userIfo) {
-        dao.update(userIfo);
+    public void modify(User userInfo) {
+        dao.update(userInfo);
     }
 }
