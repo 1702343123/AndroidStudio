@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.myapplication.fragment.BlankFragment;
+import com.example.myapplication.fragment.CourseFragment;
 import com.example.myapplication.fragment.MySettingFragment;
 import com.example.myapplication.R;
 import com.example.myapplication.utils.StatusUtils;
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         // 1. 创建fragment的列表
         fragments = new SparseArray<>();
         fragments.put(R.id.btn_my, MySettingFragment.newInstance());
-
+        fragments.put(R.id.btn_execise, BlankFragment.newInstance("Activity向Fragment传值"));
+        fragments.put(R.id.btn_course, CourseFragment.newInstance());
         // 2. 加载默认的Fragment
         replaceFragment(fragments.get(R.id.btn_my));
     }
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
         ft.replace(R.id.main_body, fragment);
+        ft.addToBackStack(null);
         ft.commit();
     }
 
@@ -96,8 +100,9 @@ public class MainActivity extends AppCompatActivity {
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                Toast.makeText(MainActivity.this, titles.get(checkedId), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, titles.get(checkedId), Toast.LENGTH_SHORT).show();
                 setToolbar(checkedId);
+                replaceFragment(fragments.get(checkedId));
             }
         });
     }

@@ -28,6 +28,7 @@ public class ModifyActivity extends AppCompatActivity {
 
         initData();
         initView();
+        StatusUtils.initToolbar(this, title, true, false);
     }
     private String title;
     private String value;
@@ -70,27 +71,33 @@ public class ModifyActivity extends AppCompatActivity {
                 save();
                 break;
             case R.id.item_cancel:
-                cancel();
+                ModifyActivity.this.finish();
                 break;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
     private void save(){
-        Intent intent=new Intent();
-        String value=etContent.getText().toString();
-        String msg="";
-        if(flag==1){
-            intent.putExtra("nickname",value);
-            msg="昵称不能为空";
-        }else{
-            intent.putExtra("signature",value);
-            msg="签名不能为空";
+        Intent intent = new Intent();
+        // 1. 获取输入的内容
+        String value = etContent.getText().toString();
+        String msg = "";
+        if(flag == 1) {
+            intent.putExtra("nickname", value);
+            msg = "昵称不能为空";
+        } else {
+            intent.putExtra("signature", value);
+            msg = "签名不能为空";
         }
-        if(TextUtils.isEmpty(value)){
-            Toast.makeText(ModifyActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(value)) {
+            Toast.makeText(ModifyActivity.this,
+                    msg, Toast.LENGTH_SHORT).show();
+        } else {
+            // 2. 将输入的内容返回给UserInfoActivity
+            setResult(RESULT_OK, intent);
+            Toast.makeText(ModifyActivity.this,
+                    "修改成功", Toast.LENGTH_SHORT).show();
             ModifyActivity.this.finish();
         }
-        finish();
     }
     private void cancel(){
 
