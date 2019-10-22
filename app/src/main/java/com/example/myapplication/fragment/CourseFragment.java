@@ -1,6 +1,7 @@
 package com.example.myapplication.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.myapplication.R;
+import com.example.myapplication.activity.CourseVideoActivity;
 import com.example.myapplication.adapter.AdViewPagerAdapter;
 import com.example.myapplication.adapter.CourseAdapter;
 import com.example.myapplication.entity.AdImage;
@@ -145,7 +147,7 @@ public class CourseFragment extends Fragment implements ViewPager.OnPageChangeLi
             //添加图片到集合中
             ImageView iv=new ImageView(getContext());
             if ("haizei".equals(adImage.getImg())){
-                iv.setBackgroundResource(R.drawable.haizei);
+                iv.setBackgroundResource(R.drawable.haizei3);
             }else if ("haizei1".equals(adImage.getImg())){
                 iv.setBackgroundResource(R.drawable.haizei1);
             }else if ("haizei2".equals(adImage.getImg())){
@@ -199,7 +201,12 @@ public class CourseFragment extends Fragment implements ViewPager.OnPageChangeLi
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Course course = (Course) parent.getItemAtPosition(position);
                 // 跳转到课程详情界面
-                Toast.makeText(getContext(), "点击了：" + course.getTitle(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "点击了：" + course.getTitle(), Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(getContext(), CourseVideoActivity.class);
+                Bundle bundle=new Bundle();//Bundle用于传递对象等复杂类型的数据
+                bundle.putSerializable("course",course);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }

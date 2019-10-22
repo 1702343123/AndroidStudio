@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -15,7 +18,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +39,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,9 +48,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final int MODIFY_NICKNAME = 1;
+    private static final int MODIFY_SIGNATURE = 2;
+
     //1.定义界面上的控件对象
     private TextView tvNickname,tvSignature,tvUsername,tvSex;
-    private RelativeLayout nicknameLayout,signatureLayout,sexLayout;
+    private RelativeLayout nicknameLayout,signatureLayout,sexLayout,headLayout;
+    private ImageView ivHead;
 
     //2.定义所需的变量
     private String spUsername;
@@ -91,10 +101,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         tvNickname=findViewById(R.id.tv_nickname);
         tvSex=findViewById(R.id.tv_sex);
         tvSignature=findViewById(R.id.tv_signature);
+        ivHead = findViewById(R.id.iv_head_icon);
 
         nicknameLayout=findViewById(R.id.rl_nickname);
         sexLayout=findViewById(R.id.rl_sex);
         signatureLayout=findViewById(R.id.rl_signature);
+        headLayout = findViewById(R.id.rl_avatar);
         //2.设置数据库获取的数据
         tvUsername.setText(userInfo.getUsername());
         tvNickname.setText(userInfo.getNickname());
@@ -104,6 +116,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         nicknameLayout.setOnClickListener(this);
         sexLayout.setOnClickListener(this);
         signatureLayout.setOnClickListener(this);
+        headLayout.setOnClickListener(this);
     }
     @Override
     public void onClick(View v){
@@ -117,6 +130,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             case  R.id.rl_signature:
                 modifySignature();
                 break;
+            case R.id.rl_avatar:
+                modifyHeadIcon();
+                break;
         }
     }
     private void modifyNickname(){
@@ -129,10 +145,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         Bundle bundle=new Bundle();
         bundle.putString("title","设置昵称");//标题栏的标题
         bundle.putString("value",nickname);//内容
-        bundle.putInt("flag",1);//用于修改昵称还是签名
+        bundle.putInt("flag",MODIFY_NICKNAME);//用于修改昵称还是签名
         intent.putExtras(bundle);
         //3.启动下一个界面
-        startActivityForResult(intent,1);
+        startActivityForResult(intent,MODIFY_NICKNAME);
     }
     private void modifySex(){
         final  String[] datas={"男","女"};
@@ -151,8 +167,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
                         service.modify(userInfo);
                         saveToInternal(userInfo);
-                        savePrivateExStorage(userInfo);
-                        savePublicExStorage(userInfo);
+//                        savePrivateExStorage(userInfo);
+//                        savePublicExStorage(userInfo);
 
                         dialogInterface.dismiss();
                     }
@@ -168,10 +184,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         Bundle bundle=new Bundle();
         bundle.putString("title","设置签名");//标题栏的标题
         bundle.putString("value",signature);//内容
-        bundle.putInt("flag",2);//用于修改昵称还是签名
+        bundle.putInt("flag",MODIFY_SIGNATURE);//用于修改昵称还是签名
         intent.putExtras(bundle);
         //3.启动下一个界面
-        startActivityForResult(intent,2);
+        startActivityForResult(intent,MODIFY_SIGNATURE);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
@@ -181,24 +197,61 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "未知错误", Toast.LENGTH_SHORT).show();
             return;
         }
-        //2.根据resquestCode进行对应的保护
-        //2.1获取data数据
-        if(requestCode==1){
-            //2.2设置userInfo对应的属性值，更新界面的控件内容
-            String value=data.getStringExtra("nickname");
-            tvNickname.setText(value);
-            userInfo.setNickname(value);
-        }else if (requestCode==2){
-            String value=data.getStringExtra("signature");
-            tvSignature.setText(value);
-            userInfo.setNickname(value);
+        // 2. 根据requestCode进行对应的保存
+        // 2.1 获取data数据
+        switch (requestCode) {
+            case 1:
+                // 2.2 设置userInfo对应的属性值，更新界面对应的控件内容
+                String newNick = data.getStringExtra("nickname");
+                if (!TextUtils.isEmpty(newNick)) {
+                    tvNickname.setText(newNick);
+
+                    // 2.3 保存到数据库
+                    userInfo.setNickname(newNick);
+                    service.modify(userInfo);
+
+                    // 2.3 保存到内部存储
+                    saveToInternal(userInfo);
+                }
+                break;
+            case 2:
+                String newSignature = data.getStringExtra("signature");
+                if (!TextUtils.isEmpty(newSignature)) {
+                    tvSignature.setText(newSignature);
+                    userInfo.setSignature(newSignature);
+                    service.modify(userInfo);
+                    saveToInternal(userInfo);
+                }
+                break;
+            case PICK_IMAGE:
+                try {
+                    Uri uri = data.getData();
+                    Bitmap header = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+                    //
+                    ivHead.setImageBitmap(header);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
-        //2.3保存到数据库
-        service.modify(userInfo);
-        //内部存储
-        saveToInternal(userInfo);
-        //外部私有存储
-        savePrivateExStorage(userInfo);
+//        //2.根据resquestCode进行对应的保护
+//        //2.1获取data数据
+//        if(requestCode==1){
+//            //2.2设置userInfo对应的属性值，更新界面的控件内容
+//            String value=data.getStringExtra("nickname");
+//            tvNickname.setText(value);
+//            userInfo.setNickname(value);
+//        }else if (requestCode==2){
+//            String value=data.getStringExtra("signature");
+//            tvSignature.setText(value);
+//            userInfo.setNickname(value);
+//        }
+//        //2.3保存到数据库
+//        service.modify(userInfo);
+//        //内部存储
+//        saveToInternal(userInfo);
+//        //外部私有存储
+//        savePrivateExStorage(userInfo);
     }
 
     private static final String FILE_NAME="userinfo.txt";
@@ -287,6 +340,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void saveUserInfo(User userInfo) {
+        // 检查SD卡的挂载情况
+        String state = Environment.getExternalStorageState();
+        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+            Toast.makeText(this, "无法读取SD卡", Toast.LENGTH_SHORT).show();
+            return;
+        }
         try{
             //1.打开文件输出流
             File file=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),FILE_NAME);
@@ -347,6 +406,21 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    private static final int REQUEST_READ_PHOTO = 13;
+    private void modifyHeadIcon() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_READ_PHOTO);
+                return;
+            }
+        }
+        choosePhoto();
+    }
+
     private static final int PICK_IMAGE = 3;
     void choosePhoto(){
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -354,9 +428,4 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         startActivityForResult(intent, PICK_IMAGE);
     }
 
-
-//    @Override
-//    public void onPointerCaptureChanged(boolean hasCapture) {
-//
-//    }
 }
